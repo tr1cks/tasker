@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Project list</title>
+
+        <h:outputStylesheet library="css" name="table-style.css"/>
+    </h:head>
+    <h:body>
+        <h1>Project list</h1>
+
+        <h:form>
+            <h:dataTable value="#{projectListPresenter.projects}" var="p"
+                         styleClass="order-table"
+                         headerClass="order-table-header"
+                         rowClasses="order-table-odd-row,order-table-even-row">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:link outcome="project" value="#{p.name}">
+                        <f:param name="id" value="#{p.id}"/>
+                    </h:link>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    <h:outputText value="#{p.description}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Action</f:facet>
+
+                    <h:button value="Edit" outcome="projectAddEdit">
+                        <f:param name="id" value="#{p.id}"/>
+                    </h:button>
+                    <h:commandButton value="Delete" action="#{projectListPresenter.delete(p)}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+
+        <h:button value="Add project" outcome="projectAddEdit"/>
+    </h:body>
+</html>

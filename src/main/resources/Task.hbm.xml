@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.github.trickster1988.tasker.client.domain">
+    <class name="com.github.tr1cks.tasker.domain.Task">
+        <id name="id"/>
+
+        <property name="name" unique="true"/>
+        <property name="description"/>
+        <property name="estimatedTimeInHours"/>
+        <property name="closed"/>
+
+        <property name="typeId"/>
+        <property name="assigneeId"/>
+        <property name="priorityId"/>
+        <property name="projectId"/>
+    </class>
+
+    <sql-query name="tasksByProjectId">
+        <return class="com.github.tr1cks.tasker.domain.Task"/>
+        select
+            *
+        from
+            task
+        where
+            projectId = :projectId
+    </sql-query>
+    <sql-query name="tasksByPersonId">
+        <return class="com.github.tr1cks.tasker.domain.Task"/>
+        select
+            *
+        from
+            task
+        where
+            assigneeId = :assigneeId
+    </sql-query>
+    <sql-query name="tasksByUserProjectTypePriority">
+        <return class="com.github.tr1cks.tasker.domain.Task"/>
+        select
+            t.*
+        from
+            Task t
+        where
+            t.projectId = :projectId and
+            (:taskTypeId is null or t.typeId = :taskTypeId) and
+            (:taskPriorityId is null or t.priorityId = :taskPriorityId) and
+
+            exists (select
+                           *
+                    from
+                         WorkLogEntry wle
+                    where
+                        wle.authorId = :userId and
+                        wle.taskId = t.id)
+    </sql-query>
+    <sql-query name="personalWorkLog">
+        <return-scalar column="taskId" type="string"/>
+        <return-scalar column="hours" type="integer"/>
+        select
+            t.id as taskId,
+            coalesce(sum(wle.hours),0) as hours
+        from
+            Task t
+            left join WorkLogEntry wle on t.id = wle.taskId
+        where
+            t.projectId = :projectId and
+            (:taskTypeId is null or t.typeId = :taskTypeId) and
+            (:taskPriorityId is null or t.priorityId = :taskPriorityId) and
+
+            wle.authorId = :userId
+        group by t.id;
+    </sql-query>
+    <sql-query name="workSummary">
+        <return-scalar column="hours" type="integer"/>
+        select
+            coalesce(sum(wle.hours), 0) as hours
+        from
+            Task t
+            join WorkLogEntry wle on t.id = wle.taskId
+        where
+            t.projectId = :projectId and
+            (:taskTypeId is null or t.typeId = :taskTypeId) and
+            (:taskPriorityId is null or t.priorityId = :taskPriorityId) and
+
+            wle.authorId = :userId
+    </sql-query>
+    <sql-query name="closedTasks">
+        <return-scalar column="closed" type="integer"/>
+        select
+            count(*) as closed
+        from
+            Task t
+        where
+            t.projectId = :projectId and
+            (:taskTypeId is null or t.typeId = :taskTypeId) and
+            (:taskPriorityId is null or t.priorityId = :taskPriorityId) and
+            t.closed = true and
+
+            exists (select
+                        *
+                    from
+                        WorkLogEntry wle
+                    where
+                        wle.authorId = :userId and
+                        wle.taskId = t.id)
+    </sql-query>
+
+    <database-object>
+        <create>
+            alter table Task add constraint fk_task_person foreign key ( assigneeid ) references Person ( id );
+            alter table Task add constraint fk_task_project foreign key ( projectid ) references Project ( id );
+            alter table Task add constraint fk_task_priority foreign key ( priorityid ) references TaskPriority ( id );
+            alter table Task add constraint fk_task_type foreign key ( typeid ) references TaskType ( id );
+
+            create index task_assigneeId_idx on task (assigneeid);
+            create index task_projectId_idx on task (projectid);
+            create index task_priorityId_idx on task (priorityid);
+            create index task_typeId_idx on task (typeid);
+        </create>
+        <drop>
+            drop index task_assigneeId_idx;
+            drop index task_projectId_idx;
+            drop index task_priorityId_idx;
+            drop index task_typeId_idx;
+
+            alter table Task drop constraint fk_task_person;
+            alter table Task drop constraint fk_task_project;
+            alter table Task drop constraint fk_task_priority;
+            alter table Task drop constraint fk_task_type;
+        </drop>
+    </database-object>
+</hibernate-mapping>

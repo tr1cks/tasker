@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.github.trickster1988.tasker.client.domain">
+    <class name="com.github.tr1cks.tasker.domain.TaskPriority">
+        <id name="id"/>
+
+        <property name="name" unique="true"/>
+        <property name="orderNum" unique="true"/>
+    </class>
+
+    <database-object>
+        <create>
+            insert into TaskPriority
+                ("id", "name", "ordernum")
+            values
+                ('9917b1acdc84467fa1756c4b6637a8b9', 'Blocker', 4),
+                ('b1a3848c4d354f7b8b66f3ba5bda2204', 'Critical', 3),
+                ('df0f05dc71eb47e0b01144b88eda8059', 'Major', 2),
+                ('2e9d247620a545bfa00a555e1c119c8b', 'Minor', 1),
+                ('5f3a7f59959f4566bb82eee555e249cb', 'Trivial', 0);
+        </create>
+        <drop>
+            delete from
+                TaskPriority
+            where
+                "id" in ('9917b1acdc84467fa1756c4b6637a8b9',
+                         'b1a3848c4d354f7b8b66f3ba5bda2204',
+                         'df0f05dc71eb47e0b01144b88eda8059',
+                         '2e9d247620a545bfa00a555e1c119c8b',
+                         '5f3a7f59959f4566bb82eee555e249cb');
+        </drop>
+    </database-object>
+</hibernate-mapping>

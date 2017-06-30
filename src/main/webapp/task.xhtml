@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+    <f:metadata>
+        <f:viewParam name="id" value="#{taskPresenter.id}"
+                     required="true" requiredMessage="Task must be selected"/>
+
+        <f:viewAction action="#{taskPresenter.load()}"/>
+    </f:metadata>
+    <h:head>
+        <title>
+            <h:outputFormat value="{0} / {1}">
+                <f:param value="#{taskPresenter.project.name}" />
+                <f:param value="#{taskPresenter.task.name}" />
+            </h:outputFormat>
+        </title>
+
+        <h:outputStylesheet library="css" name="table-style.css"/>
+    </h:head>
+    <h:body>
+        <h1>
+            <h:link value="#{taskPresenter.project.name}" outcome="project">
+                <f:param name="id" value="#{taskPresenter.project.id}"/>
+            </h:link>
+            <h:outputFormat value=" / {0}">
+                <f:param value="#{taskPresenter.task.name}" />
+            </h:outputFormat>
+        </h1>
+
+        <h:form rendered="#{authPresenter.person.id == taskPresenter.task.assigneeId}">
+            <h:commandButton value="Close" action="#{taskPresenter.close}" rendered="#{not taskPresenter.task.closed}">
+                <f:param name="id" value="#{taskPresenter.task.closed}"/>
+            </h:commandButton>
+            <h:commandButton value="Reopen" action="#{taskPresenter.reopen}" rendered="#{taskPresenter.task.closed}">
+                <f:param name="id" value="#{taskPresenter.id}"/>
+            </h:commandButton>
+            <hr/>
+        </h:form>
+
+        <h:panelGrid style="width:100%" columns="4">
+            Type:
+            <h:outputText value="#{taskPresenter.findType(taskPresenter.task.typeId).name}"/>
+
+            Priority:
+            <h:outputText value="#{taskPresenter.findPriority(taskPresenter.task.priorityId).name}"/>
+
+            Assignee:
+            <h:link value="#{taskPresenter.findPerson(taskPresenter.task.assigneeId).fullName}" outcome="person">
+                <f:param name="id" value="#{taskPresenter.task.assigneeId}"/>
+            </h:link>
+
+            Estimated (h):
+            <h:outputText value="#{taskPresenter.task.estimatedTimeInHours}"/>
+
+            Logged (h):
+            <h:outputText value="#{taskPresenter.loggedTimeInHours}"/>
+        </h:panelGrid>
+
+        <div style="margin-top: 15px; margin-bottom: 15px">
+            Description: <br />
+            <div style="margin-top: 7px">
+                <h:outputText value="#{taskPresenter.task.description}"/>
+            </div>
+        </div>
+
+        <hr/>
+
+        <table style="width: 100%">
+            <tr>
+                <td style="vertical-align: top; width: 50%">
+                    <div style="margin-top: 20px">
+                        Comments:
+                        <hr/>
+                        <ui:repeat value="#{taskPresenter.comments}" var="c">
+                            <div style="margin-top: 10px">
+                                <h:link value="#{taskPresenter.findPerson(c.authorId).fullName}" outcome="person">
+                                    <f:param name="id" value="#{c.authorId}"/>
+                                </h:link>
+                                <h:outputFormat value=" added a comment - {0}">
+                                    <f:param value="#{c.created}"/>
+                                </h:outputFormat> <br/>
+                                <div style="margin-top: 7px">
+                                    <h:outputText value="#{c.text}"/>
+                                </div>
+                                <hr/>
+                            </div>
+                        </ui:repeat>
+
+                        <h:form style="margin-top: 20px">
+                            Create comment
+
+                            <h:panelGrid columns="2">
+                                <h:inputTextarea id="comment" style="margin-top: 5px"
+                                                 value="#{taskPresenter.newTaskComment.text}"/>
+                                <h:messages for="comment" style="color:red"/>
+                            </h:panelGrid>
+
+                            <h:commandButton style="margin-top: 5px" value="Create" action="#{taskPresenter.addTaskComment}">
+                                <f:param name="id" value="#{taskPresenter.id}"/>
+                            </h:commandButton>
+                        </h:form>
+                    </div>
+                </td>
+                <td style="vertical-align: top; width: 50%">
+                    <div style="margin-top: 20px">
+                        WorkLog:
+                        <hr/>
+                        <ui:repeat value="#{taskPresenter.workLog}" var="w">
+                            <div style="margin-top: 10px">
+                                <h:link value="#{taskPresenter.findPerson(w.authorId).fullName}" outcome="person">
+                                    <f:param name="id" value="#{w.authorId}"/>
+                                </h:link>
+                                <h:outputFormat value=" logged work - {0}">
+                                    <f:param value="#{w.created}"/>
+                                </h:outputFormat>
+                                <br/>
+
+                                <h:panelGrid style="margin-top: 7px" columns="2">
+                                    Time spent:
+                                    <h:outputFormat style="margin-top: 5px" value="{0}h">
+                                        <f:param value="#{w.hours}"/>
+                                    </h:outputFormat>
+
+                                    <span/>
+                                    <div style="margin-top: 3px">
+                                        <h:outputText value="#{w.text}"/>
+                                    </div>
+                                </h:panelGrid>
+                                <hr/>
+                            </div>
+                        </ui:repeat>
+
+                        <h:form style="margin-top: 20px">
+                            Log work <br/>
+
+                            <h:panelGrid columns="3">
+                                Worked (hours):
+                                <h:inputText id="hours" style="margin-left: 5px"
+                                             value="#{taskPresenter.newWorkLogEntry.hours}" />
+                                <h:messages for="hours" style="color:red"/>
+
+                                Description:
+                                <h:inputTextarea id="description" style="margin-top: 5px" value="#{taskPresenter.newWorkLogEntry.text}"/>
+                                <h:messages for="description" style="color:red"/>
+                            </h:panelGrid>
+
+                            <h:commandButton style="margin-top: 5px" value="Log" action="#{taskPresenter.addWorkLogEntry}">
+                                <f:param name="id" value="#{taskPresenter.id}"/>
+                            </h:commandButton>
+                        </h:form>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </h:body>
+</html>

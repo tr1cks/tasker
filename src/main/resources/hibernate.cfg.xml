@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:postgresql://127.0.0.1:5432/tasker</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.username">tasker</property>
+        <property name="connection.password">tasker</property>
+
+        <property name="connection.provider_class">com.jolbox.bonecp.provider.BoneCPConnectionProvider</property>
+        <property name="bonecp.partitionCount">3</property>
+        <property name="bonecp.maxConnectionsPerPartition">15</property>
+        <property name="bonecp.minConnectionsPerPartition">2</property>
+        <property name="bonecp.acquireIncrement">3</property>
+        <property name="bonecp.disableConnectionTracking">true</property>
+
+        <property name="dialect">org.hibernate.dialect.PostgreSQL82Dialect</property>
+        <property name="hbm2ddl.auto">create</property>
+        <!--<property name="show_sql">true</property>-->
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="javax.persistence.validation.mode">ddl</property>
+
+        <mapping resource="Person.hbm.xml"/>
+        <mapping resource="Project.hbm.xml"/>
+        <mapping resource="Task.hbm.xml"/>
+        <mapping resource="TaskType.hbm.xml"/>
+        <mapping resource="TaskPriority.hbm.xml"/>
+        <mapping resource="WorkLogEntry.hbm.xml"/>
+        <mapping resource="TaskComment.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

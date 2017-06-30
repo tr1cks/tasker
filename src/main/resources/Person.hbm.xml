@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.github.trickster1988.tasker.client.domain">
+    <class name="com.github.tr1cks.tasker.domain.Person">
+        <id name="id"/>
+
+        <property name="email" unique="true"/>
+        <property name="password"/>
+        <property name="firstName"/>
+        <property name="lastName"/>
+        <property name="removed"/>
+    </class>
+
+    <sql-query name="personByEmailAndPassword">
+        <return class="com.github.tr1cks.tasker.domain.Person"/>
+        select
+            *
+        from
+            person
+        where
+            email = :email and
+            password = :password
+    </sql-query>
+
+    <database-object>
+        <create>
+            insert into person
+                ("id", "email", "password", "firstname", "lastname", "removed")
+            values
+                ('01fb88d982f74ff0b1a2732941d9a441', 'admin@tasker.ru', 'admin@tasker.ru', 'Admin', 'Admin', false);
+        </create>
+        <drop>
+            delete from
+                person
+            where
+                "id" = '01fb88d982f74ff0b1a2732941d9a441';
+        </drop>
+    </database-object>
+</hibernate-mapping>

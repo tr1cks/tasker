@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Person list</title>
+
+        <h:outputStylesheet library="css" name="table-style.css"/>
+    </h:head>
+    <h:body>
+        <h1>Person list</h1>
+
+        <h:form>
+            <h:dataTable value="#{personListPresenter.persons}" var="u"
+                         styleClass="order-table"
+                         headerClass="order-table-header"
+                         rowClasses="order-table-odd-row,order-table-even-row">
+                <h:column>
+                    <f:facet name="header">Full name</f:facet>
+                    <h:link value="#{u.fullName}" outcome="person">
+                        <f:param name="id" value="#{u.id}"/>
+                    </h:link>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Email</f:facet>
+                    <h:outputText value="#{u.email}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Removed</f:facet>
+                    <h:selectBooleanCheckbox value="#{u.removed}" disabled="true"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Action</f:facet>
+
+                    <h:button value="Edit" outcome="personAddEdit" rendered="#{!u.removed}">
+                        <f:param name="id" value="#{u.id}"/>
+                    </h:button>
+                    <h:commandButton value="Remove" action="#{personListPresenter.delete(u)}" rendered="#{!u.removed}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+
+        <h:button value="Add person" outcome="personAddEdit"/>
+    </h:body>
+</html>

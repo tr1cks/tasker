@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Time spent report</title>
+
+        <h:outputStylesheet library="css" name="table-style.css"/>
+    </h:head>
+    <h:body>
+        <h1>Time spent report</h1>
+
+        <h:form>
+            <h:panelGrid style="width:100%" columns="6">
+                User:
+                <h:selectOneMenu id="person" value="#{timeSpentReportPresenter.personId}">
+                    <f:selectItem itemLabel="-" noSelectionOption="true" itemValue="#{null}"/>
+                    <f:selectItems value="#{timeSpentReportPresenter.persons}" var="u"
+                                   itemLabel="#{u.fullName}" itemValue="#{u.id}" />
+                </h:selectOneMenu>
+                <h:message for="person" style="color:red"/>
+
+                Project:
+                <h:selectOneMenu id="project" value="#{timeSpentReportPresenter.projectId}">
+                    <f:selectItem itemLabel="-" noSelectionOption="true" itemValue="#{null}"/>
+                    <f:selectItems value="#{timeSpentReportPresenter.projects}" var="p"
+                                   itemLabel="#{p.name}" itemValue="#{p.id}" />
+                </h:selectOneMenu>
+                <h:message for="project" style="color:red"/>
+
+                Task type:
+                <h:selectOneMenu id="taskType" value="#{timeSpentReportPresenter.taskTypeId}">
+                    <f:selectItem itemLabel="-"/>
+                    <f:selectItems value="#{timeSpentReportPresenter.taskTypes}" var="t"
+                                   itemLabel="#{t.name}" itemValue="#{t.id}" />
+                </h:selectOneMenu>
+                <h:message for="taskType" style="color:red"/>
+
+                Task priority:
+                <h:selectOneMenu id="taskPriority" value="#{timeSpentReportPresenter.taskPriorityId}">
+                    <f:selectItem itemLabel="-"/>
+                    <f:selectItems value="#{timeSpentReportPresenter.taskPriorities}" var="tp"
+                                   itemLabel="#{tp.name}" itemValue="#{tp.id}" />
+                </h:selectOneMenu>
+                <h:message for="taskPriority" style="color:red"/>
+            </h:panelGrid>
+
+            <h:commandButton style="margin-top: 10px; margin-bottom: 10px" value="Build report"
+                             action="#{timeSpentReportPresenter.buildReport}"/>
+
+            <hr/>
+
+            <h:dataTable value="#{timeSpentReportPresenter.tasks}" var="task"
+                         styleClass="order-table"
+                         headerClass="order-table-header"
+                         footerClass="order-table-footer"
+                         rowClasses="order-table-odd-row,order-table-even-row">
+                <h:column>
+                    <f:facet name="header">Task name</f:facet>
+                    <h:link value="#{task.name}" outcome="task">
+                        <f:param name="id" value="#{task.id}"/>
+                    </h:link>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Type</f:facet>
+                    <h:outputText value="#{timeSpentReportPresenter.getType(task.typeId).name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Priority</f:facet>
+                    <h:outputText value="#{timeSpentReportPresenter.getPriority(task.priorityId).name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Estimated (h)</f:facet>
+                    <h:outputText value="#{task.estimatedTimeInHours}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Worked (h)</f:facet>
+                    <h:outputText value="#{timeSpentReportPresenter.worked(task.id)}"/>
+                    <f:facet name="footer">
+                        <h:outputText value="#{timeSpentReportPresenter.workSummary}"/>
+                    </f:facet>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Closed</f:facet>
+                    <h:selectBooleanCheckbox value="#{task.closed}" disabled="true"/>
+                    <f:facet name="footer">
+                        <h:outputText value="#{timeSpentReportPresenter.closedTasks}"/>
+                    </f:facet>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </h:body>
+</html>

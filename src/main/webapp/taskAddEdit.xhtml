@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:metadata>
+        <f:viewParam name="id" value="#{taskAddEditPresenter.id}"/>
+        <f:viewParam name="projectId" value="#{taskAddEditPresenter.projectId}"/>
+
+        <f:viewAction action="#{taskAddEditPresenter.loadOrCreate}"/>
+    </f:metadata>
+    <h:head>
+        <title>
+            <h:outputFormat value="{0} task">
+                <f:param value="#{taskAddEditPresenter.action}"/>
+            </h:outputFormat>
+        </title>
+    </h:head>
+    <h:body>
+        <h1>
+            <h:outputFormat value="{0} task">
+                <f:param value="#{taskAddEditPresenter.action}"/>
+            </h:outputFormat>
+        </h1>
+
+        <h:form>
+            <h:panelGrid columns="3">
+                Name:
+                <h:inputText id="name" value="#{taskAddEditPresenter.task.name}"/>
+                <h:messages for="name" style="color:red"/>
+
+                Description:
+                <h:inputTextarea id="description" value="#{taskAddEditPresenter.task.description}"/>
+                <h:messages for="description" style="color:red"/>
+
+                Type:
+                <h:selectOneMenu id="type" value="#{taskAddEditPresenter.task.typeId}">
+                    <f:selectItems value="#{taskAddEditPresenter.types}" var="t"
+                                   itemLabel="#{t.name}" itemValue="#{t.id}" />
+                </h:selectOneMenu>
+                <h:messages for="type" style="color:red"/>
+
+                Priority:
+                <h:selectOneMenu id="priority" value="#{taskAddEditPresenter.task.priorityId}">
+                    <f:selectItems value="#{taskAddEditPresenter.priorities}" var="p"
+                                   itemLabel="#{p.name}" itemValue="#{p.id}" />
+                </h:selectOneMenu>
+                <h:messages for="priority" style="color:red"/>
+
+                Assignee:
+                <h:selectOneMenu id="assignee" value="#{taskAddEditPresenter.task.assigneeId}">
+                    <f:selectItems value="#{taskAddEditPresenter.persons}" var="u"
+                                   itemLabel="#{u.fullName}" itemValue="#{u.id}" />
+                </h:selectOneMenu>
+                <h:messages for="assignee" style="color:red"/>
+
+                Estimated (h):
+                <h:inputText id="estimated" value="#{taskAddEditPresenter.task.estimatedTimeInHours}"/>
+                <h:messages for="estimated" style="color:red"/>
+            </h:panelGrid>
+
+            <h:commandButton value="#{taskAddEditPresenter.action}" action="#{taskAddEditPresenter.addOrEdit}"/>
+        </h:form>
+    </h:body>
+</html>

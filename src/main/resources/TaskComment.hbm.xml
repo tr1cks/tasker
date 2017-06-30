@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.github.trickster1988.tasker.client.domain">
+    <class name="com.github.tr1cks.tasker.domain.TaskComment">
+        <id name="id"/>
+
+        <property name="text"/>
+        <property name="created" type="timestamp"/>
+
+        <property name="authorId"/>
+        <property name="taskId"/>
+    </class>
+
+    <sql-query name="taskCommentsByTaskId">
+        <return class="com.github.tr1cks.tasker.domain.TaskComment"/>
+        select
+            *
+        from
+            taskComment
+        where
+            taskId = :taskId
+    </sql-query>
+
+    <database-object>
+        <create>
+            alter table TaskComment add constraint fk_taskComment_person foreign key ( authorid ) references Person ( id );
+            alter table TaskComment add constraint fk_taskComment_task foreign key ( taskid ) references Task ( id );
+
+            create index taskComment_authorId_idx on TaskComment (authorid);
+            create index taskComment_taskId_idx on TaskComment (taskid);
+        </create>
+        <drop>
+            drop index taskComment_authorId_idx;
+            drop index taskComment_taskId_idx;
+
+            alter table TaskComment drop constraint fk_taskComment_person;
+            alter table TaskComment drop constraint fk_taskComment_task;
+        </drop>
+    </database-object>
+</hibernate-mapping>

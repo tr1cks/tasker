@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:metadata>
+        <f:viewParam name="id" value="#{projectAddEditPresenter.id}"/>
+        <f:viewAction action="#{projectAddEditPresenter.loadOrCreate}"/>
+    </f:metadata>
+    <h:head>
+        <title>
+            <h:outputFormat value="{0} project">
+                <f:param value="#{projectAddEditPresenter.action}"/>
+            </h:outputFormat>
+        </title>
+    </h:head>
+    <h:body>
+        <h1>
+            <h:outputFormat value="{0} project">
+                <f:param value="#{projectAddEditPresenter.action}"/>
+            </h:outputFormat>
+        </h1>
+
+        <h:form>
+            <h:panelGrid columns="3">
+                Name:<br/>
+                <h:inputText id="name" style="margin-bottom: 7px" value="#{projectAddEditPresenter.project.name}"/>
+                <h:messages for="name" style="color:red"/>
+
+                Description:<br/>
+                <h:inputTextarea id="description" style="margin-bottom: 7px"
+                                 value="#{projectAddEditPresenter.project.description}"/>
+                <h:messages for="description" style="color:red"/>
+            </h:panelGrid>
+
+            <h:commandButton value="#{projectAddEditPresenter.action}" action="#{projectAddEditPresenter.addOrEdit}"/>
+        </h:form>
+    </h:body>
+</html>

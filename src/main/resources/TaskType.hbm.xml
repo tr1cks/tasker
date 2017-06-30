@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.github.trickster1988.tasker.client.domain">
+    <class name="com.github.tr1cks.tasker.domain.TaskType">
+        <id name="id"/>
+
+        <property name="name" unique="true"/>
+    </class>
+
+    <database-object>
+        <create>
+            insert into TaskType
+                ("id", "name")
+            values
+                ('c5e23dc5bf104165bbf9cac439c36f53', 'Bug'),
+                ('cb320d77a9b8411e8e07fe0db84cfc89', 'Improvement'),
+                ('1abf121dc33d436f8673050b1eb8c77d', 'Feature'),
+                ('39e519582b3044929dcf34351a755bde', 'Task');
+        </create>
+        <drop>
+            delete from
+                TaskType
+            where
+                "id" in ('c5e23dc5bf104165bbf9cac439c36f53',
+                         'cb320d77a9b8411e8e07fe0db84cfc89',
+                         '1abf121dc33d436f8673050b1eb8c77d',
+                         '39e519582b3044929dcf34351a755bde');
+        </drop>
+    </database-object>
+</hibernate-mapping>
