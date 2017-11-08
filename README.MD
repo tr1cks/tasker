@@ -25,3 +25,17 @@ It's my ancient student project. I tried to develop simplest project management 
 5. Enter you application with default user "admin@tasker.ru"/"admin@tasker.ru".
 
 P.s. I definitely don't write my code like this now. It's just example of work with Java EE stack.
+
+![Login page](screenshorts/login.png)
+
+![Main page](screenshorts/main.png)
+
+![Persons page](screenshorts/persons.png)
+
+![Projects page](screenshorts/projects.png)
+
+![Project page](screenshorts/project.png)
+
+![Task page](screenshorts/task.png)
+
+![Time spent report page](screenshorts/time-spent-report.png)
