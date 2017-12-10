@@ -1,6 +1,6 @@
 # Tasker
 
-It's my ancient student project. I tried to develop simplest project management system and make some experiments with:
+It's my ancient student project. I tried to develop simple project management system and make some experiments with:
 * Java EE stack without heavy-weight technologies like EJB and application containers.
 * JSF.
 * CDI.
@@ -12,8 +12,8 @@ It's my ancient student project. I tried to develop simplest project management 
 * Create/edit/delete/view projects.
 * Create/edit/delete/view tasks in project.
 * Add comments to tasks.
-* User can report about spend time on task.
-* Build simple reports about spend time.
+* User can report about spent time on task.
+* Build simple reports about spent time.
 
 ## How to run
 1. Setup PostgreSql 9.
@@ -23,8 +23,6 @@ It's my ancient student project. I tried to develop simplest project management 
     * Alternatively you can disable hibernate "hbm2ddl.auto=create" and restore database backup manually from "db-backup" folder.
 4. Build war and deploy it in Tomcat 7.
 5. Enter you application with default user "admin@tasker.ru"/"admin@tasker.ru".
-
-P.s. I definitely don't write my code like this now. It's just example of work with Java EE stack.
 
 ![Login page](screenshorts/login.png)
 
